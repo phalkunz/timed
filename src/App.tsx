@@ -1,24 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Timer from './components/Timer';
+import { Howl } from 'howler';
 
 function App() {
+
+  const audio = new Howl({
+    src: '/audio/alarm1.m4a',
+    loop: false,
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Timer seconds={15} onAlarm={() => audio.play()} />
+      <Timer seconds={30} onAlarm={() => audio.play()} />
     </div>
   );
 }
