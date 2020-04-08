@@ -5,6 +5,7 @@ export type TimerProps = {
   seconds: number;
   onAlarm?: (note?: string) => void;
   note?: string;
+  autoRepeat?: boolean;
 };
 
 const Timer: FC<TimerProps> = (props: TimerProps) => {
@@ -13,22 +14,51 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
   const [ started, setStarted ] = useState(false);
   const [ intervalId, setIntervalId ] = useState<any>(0);
   const [ delta, setDelta ] = useState<number>(0);
+  const [ alarmed, setAlarmed ] = useState(false);
   const leftInSeconds = Math.abs(Math.round(valueInSeconds - (delta / 1000)));
 
-  const reset = () => {
+  const start = () => {
+    setStarted(true);
+    setPaused(false);
+  };
+
+  const handleToggle = () => {
+    if (!started) {
+      start();
+    } else {
+      if (paused) {
+        setPaused(false);
+      } else {
+        setPaused(true);
+      }
+    }
+  }
+
+  const reset = React.useCallback(() => {
     setValueInSeconds(props.seconds);
     setDelta(0);
     setStarted(false);
     setPaused(true);
-  };
+  }, [props.seconds]);
 
+  const restart = () => {
+    setAlarmed(false);
+    start();
+  }
 
   React.useMemo(() => {
     if (leftInSeconds === 0) {
       props.onAlarm && props.onAlarm(props.note);
+      setAlarmed(true);
       reset();
     }
-  }, [leftInSeconds, props]);
+  }, [leftInSeconds, props, reset]);
+
+  useEffect(() => {
+    if (alarmed && props.autoRepeat) {
+      restart();
+    }
+  }, [alarmed, props.autoRepeat, React.useCallback(restart, [])]);
 
   useEffect(() => {
     const startTime = new Date().getTime();
@@ -36,6 +66,7 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
 
     if (paused || !started) {
       clearInterval(intervalId);
+      setIntervalId(0);
       setValueInSeconds(leftInSeconds)
     } else {
       setIntervalId(setInterval(() => {
@@ -55,19 +86,6 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
       toggleButtonLabel = 'Resume';
     } else {
       toggleButtonLabel = 'Pause'
-    }
-  }
-
-  const handleToggle = () => {
-    if (!started) {
-      setStarted(true);
-      setPaused(false);
-    } else {
-      if (paused) {
-        setPaused(false);
-      } else {
-        setPaused(true);
-      }
     }
   }
 

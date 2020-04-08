@@ -19,7 +19,7 @@ function App() {
 
   return (
     <div className="App">
-      <Timer seconds={15} onAlarm={handleAlarm} note="Tea is done!" />
+      <Timer seconds={15} onAlarm={handleAlarm} note="Tea is done!" autoRepeat={true} />
       <Timer seconds={30} onAlarm={handleAlarm} />
       <Timer seconds={61} onAlarm={handleAlarm} />
       <Timer seconds={60 * 60 + 1} onAlarm={handleAlarm} />
