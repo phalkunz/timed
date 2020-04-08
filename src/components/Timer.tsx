@@ -1,8 +1,10 @@
 import React, { useState, useEffect, FC } from "react";
+import formatTime from "../lib/formatTime";
 
 export type TimerProps = {
   seconds: number;
-  onAlarm?: () => void;
+  onAlarm?: (note?: string) => void;
+  note?: string;
 };
 
 const Timer: FC<TimerProps> = (props: TimerProps) => {
@@ -23,7 +25,7 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
 
   React.useMemo(() => {
     if (leftInSeconds === 0) {
-      props.onAlarm && props.onAlarm();
+      props.onAlarm && props.onAlarm(props.note);
       reset();
     }
   }, [leftInSeconds, props]);
@@ -39,7 +41,6 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
       setIntervalId(setInterval(() => {
         const now = new Date().getTime();
         setDelta(now - startTime);
-        console.log('--- tick!', intervalId);
       }, 300));
     }
 
@@ -57,8 +58,6 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
     }
   }
 
-  console.log(toggleButtonLabel, started, paused);
-
   const handleToggle = () => {
     if (!started) {
       setStarted(true);
@@ -74,7 +73,7 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
 
   return (
     <section>
-      <p>Timer {leftInSeconds < 0 ? 0 : leftInSeconds}</p>
+      <p>Timer {leftInSeconds < 0 ? 0 : formatTime(leftInSeconds)}</p>
       <p>
         <button onClick={() => handleToggle()}>{toggleButtonLabel}</button>
         <button onClick={() => reset()}>Reset</button>
