@@ -1,5 +1,6 @@
-import React, { useState, useEffect, FC } from "react";
+import React, { useState, useEffect, FC, useMemo } from "react";
 import formatTime from "../lib/formatTime";
+import useInterval from "../hooks/useInterval";
 
 export type TimerProps = {
   seconds: number;
@@ -9,17 +10,35 @@ export type TimerProps = {
 };
 
 const Timer: FC<TimerProps> = (props: TimerProps) => {
-  const [ valueInSeconds, setValueInSeconds ] = useState<number>(props.seconds);
   const [ paused, setPaused ] = useState(false);
   const [ started, setStarted ] = useState(false);
-  const [ intervalId, setIntervalId ] = useState<any>(0);
-  const [ delta, setDelta ] = useState<number>(0);
-  const [ alarmed, setAlarmed ] = useState(false);
-  const leftInSeconds = Math.abs(Math.round(valueInSeconds - (delta / 1000)));
+  const [ startTime, setStartTime ] = useState<number>(0);
+  const [ elapsed, setElapsed ] = useState<number>(0);
+  const [ lapse, setLapse ] = useState<number>(0);
 
   const start = () => {
     setStarted(true);
     setPaused(false);
+    setStartTime(new Date().getTime());
+  };
+
+  const pause = () => {
+    setPaused(true);
+    const now = new Date().getTime();
+    const diff = now - startTime;
+    setLapse(lapse + (diff / 1000));
+    setElapsed(0);
+  };
+
+  const resume = () => {
+    setPaused(false);
+  }
+
+  const reset = () => {
+    setPaused(true);
+    setStarted(false);
+    setElapsed(0);
+    setLapse(0);
   };
 
   const handleToggle = () => {
@@ -27,58 +46,35 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
       start();
     } else {
       if (paused) {
-        setPaused(false);
+        resume();
       } else {
-        setPaused(true);
+        pause();
       }
     }
-  }
+  };
 
-  const reset = React.useCallback(() => {
-    setValueInSeconds(props.seconds);
-    setDelta(0);
-    setStarted(false);
-    setPaused(true);
-  }, [props.seconds]);
 
-  const restart = () => {
-    setAlarmed(false);
-    start();
-  }
-
-  React.useMemo(() => {
-    if (leftInSeconds === 0) {
-      props.onAlarm && props.onAlarm(props.note);
-      setAlarmed(true);
+  const { seconds, note, onAlarm } = props;
+  const countdown = Math.round(seconds - (lapse + elapsed));
+  useMemo(() => {
+    if (countdown === 0) {
+      onAlarm && onAlarm(note);
       reset();
+
+      if (props.autoRepeat) {
+        start();
+      }
     }
-  }, [leftInSeconds, props, reset]);
+  }, [countdown, onAlarm, note]);
 
   useEffect(() => {
-    if (alarmed && props.autoRepeat) {
-      restart();
-    }
-  }, [alarmed, props.autoRepeat, React.useCallback(restart, [])]);
+  }, [paused, started]);
 
-  useEffect(() => {
-    const startTime = new Date().getTime();
-    setDelta(0);
-
-    if (paused || !started) {
-      clearInterval(intervalId);
-      setIntervalId(0);
-      setValueInSeconds(leftInSeconds)
-    } else {
-      setIntervalId(setInterval(() => {
-        const now = new Date().getTime();
-        setDelta(now - startTime);
-      }, 300));
-    }
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [started, paused]);
+  useInterval(() => {
+    const now = new Date().getTime();
+    const diff = now - startTime;
+    setElapsed(diff / 1000);
+  }, paused || !started || countdown <= 0 ? null : 1000 / 2);
 
   let toggleButtonLabel = 'Start';
   if (started) {
@@ -91,7 +87,7 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
 
   return (
     <section>
-      <p>Timer {leftInSeconds < 0 ? 0 : formatTime(leftInSeconds)}</p>
+      <p>Timer {elapsed < 0 ? 0 : formatTime(countdown)}</p>
       <p>
         <button onClick={() => handleToggle()}>{toggleButtonLabel}</button>
         <button onClick={() => reset()}>Reset</button>
