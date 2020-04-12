@@ -65,7 +65,7 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
         start();
       }
     }
-  }, [countdown, onAlarm, note]);
+  }, [countdown, onAlarm, note, props.autoRepeat]);
 
   useEffect(() => {
   }, [paused, started]);
@@ -88,6 +88,7 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
   return (
     <section>
       <p>Timer {elapsed < 0 ? 0 : formatTime(countdown)}</p>
+      <p><em>{note}</em></p>
       <p>
         <button onClick={() => handleToggle()}>{toggleButtonLabel}</button>
         <button onClick={() => reset()}>Reset</button>
