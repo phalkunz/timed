@@ -88,7 +88,7 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
   return (
     <section>
       <p>Timer {elapsed < 0 ? 0 : formatTime(countdown)}</p>
-      <p><em>{note}</em></p>
+      {note && <p><em>{note}</em></p>}
       <p>
         <button onClick={() => handleToggle()}>{toggleButtonLabel}</button>
         <button onClick={() => reset()}>Reset</button>

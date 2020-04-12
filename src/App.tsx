@@ -30,15 +30,24 @@ function App() {
     setTimers([...timers, data]);
   };
 
+  const handleRemoveTimer = (index: number) => {
+    setTimers(timers.filter((timer: any, i: number) => {
+      return i !== index;
+    }));
+  };
+
   requestNotificationPermission();
 
   return (
     <div className="App">
       <AddTimerForm onSubmit={handleAddTimer} />
       <hr/>
-      {timers.map((timer: any, index: number) => (
-        <Timer key={index} {...timer} onAlarm={handleAlarm} />
-      ))}
+        {timers.map((timer: any, index: number) => (
+          <div>
+            <Timer key={index} {...timer} onAlarm={handleAlarm} />
+            <button onClick={() => handleRemoveTimer(index)}>Remove</button>
+          </div>
+        ))}
     </div>
   );
 }
