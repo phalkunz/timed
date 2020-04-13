@@ -28,21 +28,27 @@ const AddTimerForm = (props: AddTimerFormProp) => {
   return (
     <form onSubmit={handleSubmit}>
       <p>
-        <label>
-          Seconds <input
-            type="text"
-            pattern="\d+"
-            placeholder="Enter seconds – e.g. 30"
-            value={seconds}
-            required={true}
-            onChange={(e) => setSeconds(e.target.value)}
-          />
-        </label>
+        <input
+          name="seconds"
+          type="text"
+          pattern="\d+"
+          placeholder="Enter seconds – e.g. 30"
+          value={seconds}
+          required={true}
+          onChange={(e) => setSeconds(e.target.value)}
+        />
+      </p>
+      <p>
+        <input type="text"
+          onChange={(e: any) => setNote(e.target.value)} value={note}
+          placeholder="Reminder note"
+        />
       </p>
       <p>
         <label>
           <input
             type="checkbox"
+            name="autoRepeat"
             pattern="\d+"
             checked={autoRepeat}
             onChange={(e: any) => {
@@ -50,9 +56,6 @@ const AddTimerForm = (props: AddTimerFormProp) => {
             }}
           /> Auto repeat?
         </label>
-      </p>
-      <p>
-        <textarea onChange={(e: any) => setNote(e.target.value)} value={note} />
       </p>
       <p>
         <button type="submit">Add</button>

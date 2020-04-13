@@ -31,6 +31,7 @@ function App() {
   };
 
   const handleRemoveTimer = (index: number) => {
+    if (!window.confirm('Are you sure you want to remove this timer?')) return;
     setTimers(timers.filter((timer: any, i: number) => {
       return i !== index;
     }));
@@ -48,6 +49,9 @@ function App() {
             <button onClick={() => handleRemoveTimer(index)}>Remove</button>
           </div>
         ))}
+        {timers.length === 0 &&
+          <p className="message message--empty">Start adding a timer!</p>
+        }
     </div>
   );
 }

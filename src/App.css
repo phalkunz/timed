@@ -36,3 +36,22 @@
     transform: rotate(360deg);
   }
 }
+
+.message {
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.message--empty {
+  color: #888;
+}
+
+.button-wrapper button,
+.button-wrapper .button {
+  margin-right: 0.5rem;
+}
+
+.button-wrapper button:last-child,
+.button-wrapper .button:last-child {
+  margin-right: 0;
+}
