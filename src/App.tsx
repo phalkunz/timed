@@ -4,7 +4,9 @@ import Timer from './components/Timer';
 import { Howl } from 'howler';
 import notify, { requestNotificationPermission } from './lib/notify';
 import formatTime from './lib/formatTime';
-import AddTimerForm from './components/AddTimerForm';
+import AddTimerForm, { TimerFormData } from './components/AddTimerForm';
+import styled from 'styled-components';
+import useLocalStorage from './hooks/useLocaleStorage';
 
 interface TimerInterface {
   seconds: number;
@@ -12,14 +14,23 @@ interface TimerInterface {
   autoRepeat?: boolean;
 };
 
+const StyledTimerWrapper = styled.section`
+  position: relative;
+`;
+
+const StyledRemoveButton = styled.button`
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+`;
+
 function App() {
   const audio = new Howl({
     src: '/audio/alarm1.m4a',
     loop: false,
   });
-  const [timers, setTimers] = useState<TimerInterface[]>([]);
-  const [formSeconds, setFormSeconds] = useState<any>('');
-  const [formAutoRepeat, setFormAutoRepeat] = useState<boolean>(false);
+  const [timers, setTimers] = useLocalStorage('REMINDERS', []);
 
   const handleAlarm = (note?: string) => {
     audio.play();
@@ -27,14 +38,16 @@ function App() {
   };
 
   const handleAddTimer = (data: any) => {
-    setTimers([...timers, data]);
+    const updated = [...timers, data];
+    setTimers(updated);
   };
 
   const handleRemoveTimer = (index: number) => {
     if (!window.confirm('Are you sure you want to remove this timer?')) return;
-    setTimers(timers.filter((timer: any, i: number) => {
+    const updated = timers.filter((timer: any, i: number) => {
       return i !== index;
-    }));
+    });
+    setTimers(updated);
   };
 
   requestNotificationPermission();
@@ -43,15 +56,19 @@ function App() {
     <div className="App">
       <AddTimerForm onSubmit={handleAddTimer} />
       <hr/>
-        {timers.map((timer: any, index: number) => (
-          <div>
-            <Timer key={index} {...timer} onAlarm={handleAlarm} />
-            <button onClick={() => handleRemoveTimer(index)}>Remove</button>
-          </div>
-        ))}
-        {timers.length === 0 &&
-          <p className="message message--empty">Start adding a timer!</p>
-        }
+      {timers.map((timer: any, index: number) => (
+        <StyledTimerWrapper>
+          <Timer key={index} {...timer} onAlarm={handleAlarm} />
+          <StyledRemoveButton
+            onClick={() => handleRemoveTimer(index)}
+          >
+            Remove
+          </StyledRemoveButton>
+        </StyledTimerWrapper>
+      ))}
+      {timers.length === 0 &&
+        <p className="message message--empty">Start adding a timer!</p>
+      }
     </div>
   );
 }

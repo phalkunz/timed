@@ -53,7 +53,6 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
     }
   };
 
-
   const { seconds, note, onAlarm } = props;
   const countdown = Math.round(seconds - (lapse + elapsed));
   useMemo(() => {
