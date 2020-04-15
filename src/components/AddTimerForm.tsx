@@ -42,6 +42,7 @@ const AddTimerForm = (props: AddTimerFormProp) => {
     <form onSubmit={handleSubmit}>
       <p>
         <CountdownInput
+          tabIndex={0}
           name="seconds"
           type="text"
           pattern="\d+"

@@ -16,6 +16,7 @@ interface TimerInterface {
 
 const StyledTimerWrapper = styled.section`
   position: relative;
+  border-bottom: 1px dotted #ccc;
 `;
 
 const StyledRemoveButton = styled.button`
