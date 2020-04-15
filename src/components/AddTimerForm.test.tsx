@@ -21,6 +21,11 @@ describe('AddTimeForm component', () => {
     userEvent.type(getByPlaceholderText('Reminder note'), 'Stretch time');
     getByRole('button').click();
     expect(mockCallback).toHaveBeenCalled();
+    expect(mockCallback).toHaveBeenLastCalledWith({
+      "seconds": 30,
+      "autoRepeat": false,
+      "note": "Stretch time",
+    });
   });
 
   it('should clear form field values after submission', () => {
