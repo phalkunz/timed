@@ -23,6 +23,7 @@ const StyledRemoveButton = styled.button`
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
+  border-radius: 100rem;
 `;
 
 function App() {
@@ -62,7 +63,8 @@ function App() {
           <StyledRemoveButton
             onClick={() => handleRemoveTimer(index)}
           >
-            Remove
+            x
+            <span className="sr-only">Remove</span>
           </StyledRemoveButton>
         </StyledTimerWrapper>
       ))}

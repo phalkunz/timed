@@ -1,6 +1,29 @@
 import React, { useState, useEffect, FC, useMemo } from "react";
 import formatTime from "../lib/formatTime";
 import useInterval from "../hooks/useInterval";
+import styled from 'styled-components';
+
+const TimerDisplayWrapper = styled.p`
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 0;
+`;
+
+const TimerDisplay = styled.span`
+  font-family: var(--font-family-code);
+  font-size: 1.3rem;
+  color: #333;
+`;
+
+const RepeatIndicator = styled.span`
+  font-size: 0.6rem;
+  border: 1px solid #aaa;
+  color: #aaa;
+  border-radius: 0.3rem;
+  padding: 0.2rem 0.4rem;
+  margin-right: 0.5rem;
+`;
 
 export type TimerProps = {
   seconds: number;
@@ -86,10 +109,10 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
 
   return (
     <section>
-      <p>
-        {props.autoRepeat && '[R]'}&nbsp;
-        {elapsed < 0 ? 0 : formatTime(countdown)}
-      </p>
+      <TimerDisplayWrapper>
+        {props.autoRepeat && <RepeatIndicator>Repeat</RepeatIndicator>}&nbsp;
+        <TimerDisplay>{elapsed < 0 ? 0 : formatTime(countdown)}</TimerDisplay>
+      </TimerDisplayWrapper>
       {note && <p><em>{note}</em></p>}
       <p className="button-wrapper">
         <button onClick={() => handleToggle()}>{toggleButtonLabel}</button>

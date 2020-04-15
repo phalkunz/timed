@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 
 export type TimerFormData = {
   seconds: number;
@@ -9,6 +10,18 @@ export type TimerFormData = {
 type AddTimerFormProp = {
   onSubmit: (data: TimerFormData) => void;
 };
+
+const SubmitButton = styled.button`
+  margin-left: 1rem;
+`;
+
+const CountdownInput = styled.input`
+  && {
+    min-width: auto;
+    width: 5.5rem;
+    margin-right: 0.5rem;
+  }
+`;
 
 const AddTimerForm = (props: AddTimerFormProp) => {
   const [seconds, setSeconds] = useState<string>('');
@@ -28,17 +41,15 @@ const AddTimerForm = (props: AddTimerFormProp) => {
   return (
     <form onSubmit={handleSubmit}>
       <p>
-        <input
+        <CountdownInput
           name="seconds"
           type="text"
           pattern="\d+"
-          placeholder="Enter seconds – e.g. 30"
+          placeholder="Countdown"
           value={seconds}
           required={true}
-          onChange={(e) => setSeconds(e.target.value)}
+          onChange={(e: any) => setSeconds(e.target.value)}
         />
-      </p>
-      <p>
         <input type="text"
           onChange={(e: any) => setNote(e.target.value)} value={note}
           placeholder="Reminder note"
@@ -56,9 +67,7 @@ const AddTimerForm = (props: AddTimerFormProp) => {
             }}
           /> Auto repeat?
         </label>
-      </p>
-      <p>
-        <button type="submit">Add</button>
+        <SubmitButton type="submit">Add</SubmitButton>
       </p>
     </form>
   );
