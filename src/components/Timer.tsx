@@ -89,9 +89,6 @@ const Timer: FC<TimerProps> = (props: TimerProps) => {
     }
   }, [countdown, onAlarm, note, props.autoRepeat]);
 
-  useEffect(() => {
-  }, [paused, started]);
-
   useInterval(() => {
     const now = new Date().getTime();
     const diff = now - startTime;
