@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC, useMemo } from "react";
+import React, { useState, FC, useMemo } from "react";
 import formatTime from "../lib/formatTime";
 import useInterval from "../hooks/useInterval";
 import styled from 'styled-components';
