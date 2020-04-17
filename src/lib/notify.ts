@@ -1,7 +1,8 @@
 export default function notify(msg: string): void {
   // Let's check if the browser supports notifications
   if (!("Notification" in window)) {
-    alert("This browser does not support desktop notification");
+    console.warn('Notification feature is not available.');
+    return;
   }
 
   // Let's check whether notification permissions have already been granted
@@ -22,7 +23,10 @@ export default function notify(msg: string): void {
 };
 
 export function requestNotificationPermission(): void {
-  if (Notification.permission === "default") {
+  if (!("Notification" in window)) {
+    console.warn('Notification feature is not available.');
+    return;
+  } else if (Notification.permission === "default") {
     Notification.requestPermission();
   }
 }
