@@ -46,7 +46,7 @@ const AddTimerForm = (props: AddTimerFormProp) => {
           name="seconds"
           type="text"
           pattern="\d+"
-          placeholder="Countdown"
+          placeholder="Seconds"
           value={seconds}
           required={true}
           onChange={(e: any) => setSeconds(e.target.value)}

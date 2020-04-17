@@ -9,7 +9,7 @@ import { useState } from 'react';
  */
 const useLocalStorage = (key: string, defaultData: any) => {
   const storage = window.localStorage;
-  const [state, setState] = useState<any>(JSON.parse(storage.getItem(key) || ''));
+  const [state, setState] = useState<any>(JSON.parse(storage.getItem(key) || 'null'));
 
   const setData = (data: any) => {
     storage.setItem(key, JSON.stringify(data));
@@ -21,7 +21,7 @@ const useLocalStorage = (key: string, defaultData: any) => {
     setState(defaultData);
   };
 
-  return [state, setData, resetData];
+  return [state || defaultData, setData, resetData];
 };
 
 export default useLocalStorage;
