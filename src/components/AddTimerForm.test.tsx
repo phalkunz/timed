@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event';
 describe('AddTimeForm component', () => {
   it('should render properly', () => {
     const { getAllByLabelText, getAllByPlaceholderText, getByRole } = render(<AddTimerForm />);
-    expect(getAllByPlaceholderText('Countdown')).toHaveLength(1);
+    expect(getAllByPlaceholderText('Seconds')).toHaveLength(1);
     expect(getAllByPlaceholderText('Reminder note')).toHaveLength(1);
     expect(getAllByLabelText('Auto repeat?', { selector: 'input' })).toHaveLength(1);
     expect(getByRole('button')).toHaveAttribute('type', 'submit');
@@ -17,7 +17,7 @@ describe('AddTimeForm component', () => {
     const mockCallback = jest.fn();
     const { getByRole, getByPlaceholderText } = render(<AddTimerForm onSubmit={mockCallback} />);
     expect(mockCallback).not.toHaveBeenCalled();
-    userEvent.type(getByPlaceholderText('Countdown'), '30');
+    userEvent.type(getByPlaceholderText('Seconds'), '30');
     userEvent.type(getByPlaceholderText('Reminder note'), 'Stretch time');
     getByRole('button').click();
     expect(mockCallback).toHaveBeenCalled();
@@ -30,7 +30,7 @@ describe('AddTimeForm component', () => {
 
   it('should clear form field values after submission', () => {
     const { debug, getByRole, getByPlaceholderText, getByLabelText } = render(<AddTimerForm onSubmit={jest.fn()} />);
-    const countdownInput = getByPlaceholderText('Countdown');
+    const countdownInput = getByPlaceholderText('Seconds');
     const noteInput = getByPlaceholderText('Reminder note');
     const checkbox = getByLabelText('Auto repeat?', { selector: 'input' });
     userEvent.type(countdownInput, '30');
