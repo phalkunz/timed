@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import Timer from './components/Timer';
 import { Howl } from 'howler';
 import notify, { requestNotificationPermission } from './lib/notify';
-import formatTime from './lib/formatTime';
-import AddTimerForm, { TimerFormData } from './components/AddTimerForm';
+import AddTimerForm from './components/AddTimerForm';
 import styled from 'styled-components';
 import useLocalStorage from './hooks/useLocaleStorage';
 
